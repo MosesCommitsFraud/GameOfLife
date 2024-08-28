@@ -1,9 +1,7 @@
-from time import sleep
 from random import randint
 import pygame
 import sys
-import tkinter as tk
-from tkinter import simpledialog
+
 
 def createScreen():
     print('available resolutions', pygame.display.list_modes(0))
