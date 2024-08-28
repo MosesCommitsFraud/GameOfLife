@@ -2,6 +2,8 @@ from time import sleep
 from random import randint
 import pygame
 import sys
+import tkinter as tk
+from tkinter import simpledialog
 
 
 def createScreen():
@@ -65,14 +67,14 @@ def evolve(grid):
 
 
 BLACK = (0, 0, 0)
-
+LIGHT_BLUE = (173, 216, 230)
 
 def draw_block(x, y, alive_color):
     block_size = 9
     x *= block_size
     y *= block_size
-    center_point = (int(x + (block_size / 2)), int(y + (block_size / 2)))
-    pygame.draw.circle(screen, alive_color, center_point, int(block_size / 2), 0)
+    rect = pygame.Rect(x, y, block_size, block_size)
+    pygame.draw.rect(screen, alive_color, rect)
 
 
 def handleInputEvents(xlen, ylen):
@@ -94,10 +96,7 @@ def main():
     global screen
     screen = createScreen()
     (xmax, ymax) = screen.get_size()
-    h = 0
     cell_number = 0
-    alive_color = pygame.Color(0, 0, 0)
-    alive_color.hsva = [h, 100, 100]
 
     # Fix the float to int conversion issue
     xlen = int(xmax / 9)
@@ -105,6 +104,12 @@ def main():
 
     global world
     world = make_random_grid(xlen, ylen)
+
+    global iteration_count
+    iteration_count = 0
+
+    font = pygame.font.SysFont(None, 36)
+
     while True:
         handleInputEvents(xlen, ylen)
         clock.tick(40)
@@ -112,11 +117,17 @@ def main():
             for y in range(ylen):
                 alive = world[x][y]
                 cell_number += 1
-                cell_color = alive_color if alive else BLACK
+                cell_color = LIGHT_BLUE if alive else BLACK
                 draw_block(x, y, cell_color)
+
+        iteration_count += 1
+
+        # Draw background rectangle for iteration count
+        pygame.draw.rect(screen, (0, 0, 0), (10, 10, 200, 40))
+        iteration_text = font.render(f"Iteration: {iteration_count}", True, (255, 255, 255))
+        screen.blit(iteration_text, (15, 15))
+
         pygame.display.flip()
-        h = (h + 2) % 360
-        alive_color.hsva = (h, 100, 100)
         world = evolve(world)
         cell_number = 0
 
