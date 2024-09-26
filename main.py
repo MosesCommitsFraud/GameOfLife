@@ -2,7 +2,6 @@ from random import randint
 import pygame
 import sys
 
-
 def createScreen():
     print('available resolutions', pygame.display.list_modes(0))
     screen_width, screen_height = pygame.display.list_modes(0)[0]
